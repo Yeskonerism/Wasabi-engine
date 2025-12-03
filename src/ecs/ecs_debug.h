@@ -1,6 +1,9 @@
-#ifndef __ECS_ENTITY_H__
-#define __ECS_ENTITY_H__
+#ifndef __ECS_DEBUG_H__
+#define __ECS_DEBUG_H__
 
+#include "ecs/ecs.h"
 
+void ecs_print(void);
+void ecs_entity_print(Entity e);
 
-#endif
+#endif // __ECS_DEBUG_H__

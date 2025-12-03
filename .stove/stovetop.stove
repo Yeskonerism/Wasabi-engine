@@ -1,0 +1,41 @@
+// Stovetop configuration file
+var PROJECT = "wasabi-engine"
+
+project("${PROJECT}")
+version(0.0.5)
+
+runtime("gcc")
+
+// Variables
+var SRC = "src"
+var OUT = "bin"
+var OBJ = "obj"
+var CFLAGS = "-Wall -Wextra -O2"
+var FILES = "src/main.c src/ecs/ecs_entity.c src/ecs/ecs_position.c src/ecs/ecs_velocity.c src/ecs/ecs.c src/ecs/ecs_debug.c src/game/game.c src/util/log.c src/engine/engine.c"
+var FILES_SIMP = "src/**/*.c src/main.c"
+
+// Commands
+build_command("${CFLAGS} ${FILES} -I${SRC} -o ${OUT}/wasabi-engine")
+executable("${OUT}/wasabi-engine")
+
+// Hooks
+pre_build_hook("
+	echo 'Building ${PROJECT} to ${OUT}/${PROJECT}...';
+
+	if [ ! -d '${OUT}' ]; then 
+		echo 'Out directory does not exist... creating...';
+		mkdir -p ${OUT} && echo 'Directory ${OUT} created.';
+	fi
+")
+
+post_build_hook("
+	if [ -f 'bin/wasabi-engine' ]; then 
+		sh .stove/scripts/verify-build-success.sh '${OUT}/${PROJECT}'; 
+	else 
+		echo 'Stove did not output an executable to ${OUT}/${PROJECT}, you may have errors in your code.'; 
+	fi
+")
+
+// Aliases
+alias("clean", "rm -rf ${OUT} && rm -rf obj")
+alias("remake", "mkdir -p ${OUT} ${OBJ}")
